@@ -7,7 +7,7 @@ import EventLayout from '@/views/event/Layout.vue'
 import NotFound from '@/views/NotFound.vue'
 import NetWorkError from '@/views/NetworkError.vue'
 import nProgress from 'nprogress'
-import EventService from '../services/EventService'
+import PatientService from '../services/PatientServices'
 import GStore from '@/store'
 
 const routes = [
@@ -28,7 +28,7 @@ const routes = [
     props: true,
     component: EventLayout,
     beforeEnter: (to) => {
-      return EventService.getEvent(to.params.id)
+      return PatientService.getEvent(to.params.id)
         .then((response) => {
           GStore.event = response.data
         })
