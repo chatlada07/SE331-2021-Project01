@@ -1,20 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import EventList from '../views/EventList.vue'
+import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import EventDetails from '@/views/event/Details.vue'
-import EventRegister from '@/views/event/Register.vue'
 import EventEdit from '@/views/event/Edit.vue'
 import EventLayout from '@/views/event/Layout.vue'
 import NotFound from '@/views/NotFound.vue'
 import NetWorkError from '@/views/NetworkError.vue'
-import NProgress from 'nprogress'
-import EventService from '@/services/EventService.js'
+import nProgress from 'nprogress'
+import EventService from '../services/EventService'
 import GStore from '@/store'
+
 const routes = [
   {
     path: '/',
-    name: 'EventList',
-    component: EventList,
+    name: 'Home',
+    component: Home,
     props: (route) => ({ page: parseInt(route.query.page) || 1 })
   },
   {
@@ -28,20 +28,18 @@ const routes = [
     props: true,
     component: EventLayout,
     beforeEnter: (to) => {
-      return EventService.getEvent(to.params.id) // Return and params.id
+      return EventService.getEvent(to.params.id)
         .then((response) => {
-          // Still need to set the data here
-          GStore.event = response.data // <--- Store the event
+          GStore.event = response.data
         })
         .catch((error) => {
           if (error.response && error.response.status == 404) {
             return {
-              // <--- Return
               name: '404Resource',
               params: { resource: 'event' }
             }
           } else {
-            return { name: 'NetworkError' } // <--- Return
+            return { name: 'NetworkError' }
           }
         })
     },
@@ -50,12 +48,6 @@ const routes = [
         path: '',
         name: 'EventDetails',
         component: EventDetails
-      },
-      {
-        path: 'register',
-        name: 'EventRegister',
-        props: true,
-        component: EventRegister
       },
       {
         path: 'edit',
@@ -94,11 +86,13 @@ const router = createRouter({
     }
   }
 })
+
+//เรียกคำสั่งมาใส่ในนี้แทน
 router.beforeEach(() => {
-  NProgress.start()
+  nProgress.start()
+})
+router.afterEach(() => {
+  nProgress.done()
 })
 
-router.afterEach(() => {
-  NProgress.done()
-})
 export default router

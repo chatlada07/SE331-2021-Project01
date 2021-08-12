@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: process.env.VUE_APP_BACKEND_URL,
+  baseURL: 'https://api.instantwebtools.net/v1',
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -10,11 +10,12 @@ const apiClient = axios.create({
 })
 
 export default {
+  //receive perPage and page to sent to the request url
   getEvents(perPage, page) {
-    return apiClient.get('/events?_limit=' + perPage + '&_page=' + page)
+    return apiClient.get('/passenger?page=' + page + '&size=' + perPage)
   },
   //Added new call
   getEvent(id) {
-    return apiClient.get('/events/' + id)
+    return apiClient.get('/passenger/' + id)
   }
 }
